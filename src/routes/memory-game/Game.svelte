@@ -45,7 +45,7 @@
 	};
 
 	export let level = LEVELS.EASY;
-	const itemCount = level.item_count;
+	let itemCount = level.item_count;
 
 	let blockArr: Block[][];
 	let currentSelection: Record<string, string | number>[] = [];
@@ -53,9 +53,12 @@
 	let gameState = GAME_STATE.RUNNING;
 	let disableClick = false;
 
+	// Start, Restart Game
 	function start() {
 		blockArr = [];
 		gameState = GAME_STATE.RUNNING;
+		score = 0;
+    itemCount = level.item_count;
 
 		let images = getRandomImages(itemCount);
 		images = [...images, ...images];
@@ -126,12 +129,29 @@
 		}
 	}
 
+  /**
+   * Handles level selection and restarts the level
+   */
+  function changeLevel(e: any) {//fix event type
+    level = LEVELS[e.target.value];
+
+    start();
+  }
+
 	// start the game
 	start();
 </script>
 
 <section>
-	<div class="flex justify-end mt-6">
+	<div class="flex justify-between mt-6">
+		<div class="flex">
+      <h4 class="font-medium">Change Level: </h4>
+			<select on:change={changeLevel}>
+        {#each Object.keys(LEVELS) as value }
+          <option {value}>{value}</option>
+        {/each}
+			</select>
+		</div>
 		<h4 class="font-medium text-lg">Score: {score} / {itemCount}</h4>
 	</div>
 
